@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tinta Digital — Ebooks técnicos para aprender haciendo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  GOOGLE ADSENSE — actívalo cuando tengas cuenta aprobada.
+  1. Sustituye ca-pub-XXXXXXXXXXXXXXXX por tu ID de editor.
+  2. Descomenta la siguiente etiqueta <script>.
+  ============================================================
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+
+<style>
+:root{
+  --ink:#1B1F3B;
+  --ink-2:#12142B;
+  --accent:#E4572E;
+  --accent-2:#F2794F;
+  --paper:#FAF7F0;
+  --paper-dim:#F0EBDF;
+  --mute:#8A8FBF;
+  --mute-dark:#6B6F8C;
+  --line: rgba(250,247,240,0.14);
+  --ok:#3FA796;
+  --radius:2px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  letter-spacing:-0.01em;
+}
+.mono{font-family:'JetBrains Mono',monospace;}
+a{color:inherit;}
+img{max-width:100%;display:block;}
+
+/* ---------- utility ---------- */
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px;}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-weight:600;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Inter',sans-serif;font-weight:600;font-size:14.5px;
+  padding:13px 24px;border-radius:var(--radius);border:1.5px solid transparent;
+  cursor:pointer;transition:transform .15s ease, background .2s ease, border-color .2s ease;
+  text-decoration:none;
+}
+.btn:active{transform:scale(0.97);}
+.btn-accent{background:var(--accent);color:var(--paper);}
+.btn-accent:hover{background:var(--accent-2);}
+.btn-ghost{background:transparent;color:var(--paper);border-color:var(--line);}
+.btn-ghost:hover{border-color:var(--paper);}
+.btn-dark{background:var(--ink);color:var(--paper);}
+.btn-dark:hover{background:var(--ink-2);}
+.btn[disabled]{opacity:0.5;cursor:not-allowed;}
+
+/* ---------- top nav ---------- */
+header.site{
+  position:sticky;top:0;z-index:50;
+  background:var(--ink);
+  border-bottom:1px solid var(--line);
+}
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 28px;max-width:1160px;margin:0 auto;
+}
+.brand{display:flex;align-items:center;gap:10px;color:var(--paper);text-decoration:none;}
+.brand .seal{
+  width:30px;height:30px;border-radius:50%;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;color:var(--ink);
+}
+.brand .word{font-family:'Fraunces',serif;font-weight:700;font-size:19px;letter-spacing:-0.01em;}
+.nav-links{display:flex;align-items:center;gap:28px;}
+.nav-links a{color:var(--mute);text-decoration:none;font-size:14.5px;font-weight:500;transition:color .15s;}
+.nav-links a:hover{color:var(--paper);}
+.cart-btn{
+  position:relative;background:transparent;border:1.5px solid var(--line);color:var(--paper);
+  padding:9px 16px;border-radius:var(--radius);font-family:'Inter';font-size:14px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+}
+.cart-btn:hover{border-color:var(--paper);}
+.cart-count{
+  background:var(--accent);color:var(--paper);font-size:11px;font-weight:700;
+  border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- hero ---------- */
+.hero{
+  background:var(--ink);
+  color:var(--paper);
+  padding:88px 0 96px;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid var(--line);
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background-image: repeating-linear-gradient(90deg, transparent, transparent 79px, var(--line) 79px, var(--line) 80px);
+  opacity:0.35; pointer-events:none;
+}
+.hero-inner{position:relative;display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:center;}
+.hero h1{font-size:clamp(38px,5vw,62px);line-height:1.03;margin:18px 0 22px;}
+.hero h1 em{font-style:italic;color:var(--accent-2);}
+.hero p.lead{font-size:17.5px;line-height:1.6;color:var(--mute);max-width:480px;margin:0 0 32px;}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-stats{display:flex;gap:32px;margin-top:44px;}
+.stat b{display:block;font-family:'Fraunces',serif;font-size:26px;color:var(--paper);}
+.stat span{font-size:12.5px;color:var(--mute-dark);text-transform:uppercase;letter-spacing:.08em;}
+
+/* signature stack of covers in hero */
+.stack{position:relative;height:400px;}
+.stack .cover-mini{
+  position:absolute;width:220px;aspect-ratio:3/4;
+  border-radius:4px;box-shadow:0 30px 60px -20px rgba(0,0,0,0.55);
+  border:1px solid rgba(255,255,255,0.08);
+  overflow:hidden;
+}
+.stack .c1{top:0;left:40px;transform:rotate(-7deg);z-index:1;}
+.stack .c2{top:30px;left:150px;transform:rotate(4deg);z-index:2;}
+.stack .c3{top:70px;left:75px;transform:rotate(-2deg);z-index:3;}
+
+/* ---------- section headers ---------- */
+.section{padding:84px 0;}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px;gap:24px;flex-wrap:wrap;}
+.section-head h2{font-size:clamp(28px,3.4vw,38px);margin:8px 0 0;}
+.section-head p{color:var(--mute-dark);font-size:15px;max-width:420px;margin:8px 0 0;}
+
+/* ---------- catalog grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:26px;}
+.card{
+  background:var(--ink);border-radius:6px;overflow:hidden;
+  border:1px solid rgba(27,31,59,0.08);
+  display:flex;flex-direction:column;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.card:hover{transform:translateY(-5px);box-shadow:0 22px 40px -18px rgba(27,31,59,0.35);}
+.cover{
+  aspect-ratio:3/4;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding:22px 16px;text-align:center;
+  border-bottom:1px solid var(--line);
+}
+.cover .band-top{position:absolute;top:0;left:0;right:0;height:9px;background:var(--accent);}
+.cover .seal{
+  width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;
+  margin:26px 0 10px;
+}
+.cover .coll{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;}
+.cover .ctitle{font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:var(--paper);line-height:1.18;margin-top:14px;}
+.card-body{padding:18px 18px 20px;background:var(--paper);flex:1;display:flex;flex-direction:column;}
+.card-body .teaser{font-size:13px;color:var(--mute-dark);line-height:1.5;margin:0 0 14px;flex:1;}
+.card-meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--mute-dark);margin-bottom:14px;font-family:'JetBrains Mono',monospace;}
+.card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.price{font-family:'Fraunces',serif;font-weight:700;font-size:19px;}
+.add-btn{
+  background:var(--ink);color:var(--paper);border:none;border-radius:var(--radius);
+  padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;
+  display:flex;align-items:center;gap:6px;
+}
+.add-btn:hover{background:var(--accent);}
+.add-btn.added{background:var(--ok);}
+
+/* ---------- why section ---------- */
+.why{background:var(--paper-dim);}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;}
+.why-item .num{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:13px;font-weight:700;}
+.why-item h3{font-size:19px;margin:10px 0 8px;}
+.why-item p{font-size:14.5px;color:var(--mute-dark);line-height:1.6;margin:0;}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--mute);padding:56px 0 34px;}
+.foot-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;margin-bottom:36px;}
+.foot-brand p{max-width:320px;font-size:13.5px;line-height:1.6;color:var(--mute-dark);}
+.foot-cols{display:flex;gap:56px;flex-wrap:wrap;}
+.foot-col h4{font-family:'Inter';font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--paper);margin:0 0 14px;}
+.foot-col a{display:block;font-size:13.5px;color:var(--mute-dark);text-decoration:none;margin-bottom:9px;}
+.foot-col a:hover{color:var(--paper);}
+.foot-bottom{border-top:1px solid var(--line);padding-top:22px;font-size:12.5px;color:var(--mute-dark);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+/* ---------- cart drawer ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(18,20,43,0.55);z-index:90;
+  opacity:0;pointer-events:none;transition:opacity .25s ease;
+}
+.overlay.open{opacity:1;pointer-events:auto;}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);
+  background:var(--paper);z-index:100;box-shadow:-30px 0 60px rgba(0,0,0,0.25);
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;
+}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:22px 24px;border-bottom:1px solid rgba(27,31,59,0.1);display:flex;justify-content:space-between;align-items:center;}
+.drawer-head h3{margin:0;font-size:20px;}
+.close-btn{background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink);line-height:1;}
+.drawer-items{flex:1;overflow-y:auto;padding:8px 24px;}
+.drawer-empty{padding:60px 10px;text-align:center;color:var(--mute-dark);font-size:14px;}
+.d-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid rgba(27,31,59,0.08);}
+.d-item .mini{width:52px;height:70px;border-radius:3px;background:var(--ink);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;position:relative;overflow:hidden;}
+.d-item .mini::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent);}
+.d-item-info{flex:1;}
+.d-item-info h4{margin:0 0 4px;font-size:14.5px;font-family:'Inter';font-weight:600;}
+.d-item-info .p{font-size:13px;color:var(--mute-dark);}
+.d-remove{background:none;border:none;color:var(--mute-dark);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;margin-top:6px;}
+.drawer-foot{padding:22px 24px 26px;border-top:1px solid rgba(27,31,59,0.1);}
+.total-row{display:flex;justify-content:space-between;font-size:15px;margin-bottom:16px;}
+.total-row b{font-family:'Fraunces',serif;font-size:21px;}
+
+/* ---------- checkout modal ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(18,20,43,0.65);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--paper);border-radius:8px;max-width:460px;width:100%;
+  padding:34px 30px;max-height:90vh;overflow-y:auto;
+}
+.modal h3{margin:0 0 6px;font-size:23px;}
+.modal p.sub{color:var(--mute-dark);font-size:13.5px;margin:0 0 22px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;color:var(--ink);}
+.field input{
+  width:100%;padding:11px 13px;border:1.5px solid rgba(27,31,59,0.18);border-radius:5px;
+  font-family:'Inter';font-size:14px;background:#fff;
+}
+.field input:focus{outline:none;border-color:var(--accent);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-note{
+  background:var(--paper-dim);border-left:3px solid var(--accent);padding:11px 14px;
+  font-size:12px;color:var(--mute-dark);line-height:1.5;margin:6px 0 20px;border-radius:0 4px 4px 0;
+}
+.success{text-align:center;padding:10px 0;}
+.success .check{
+  width:56px;height:56px;border-radius:50%;background:var(--ok);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 18px;
+}
+.dl-list{margin:22px 0;text-align:left;}
+.dl-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 14px;background:var(--paper-dim);border-radius:6px;margin-bottom:10px;
+}
+.dl-item span{font-size:13.5px;font-weight:600;}
+.dl-item a{font-size:12.5px;color:var(--accent);font-weight:700;text-decoration:none;}
+.spinner{
+  width:34px;height:34px;border:3px solid rgba(27,31,59,0.15);border-top-color:var(--accent);
+  border-radius:50%;margin:20px auto;animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ---------- ad slots ---------- */
+.ad-slot{
+  width:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--paper-dim);
+  border:1px dashed rgba(27,31,59,0.22);
+  border-radius:6px;
+  color:var(--mute-dark);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  gap:6px;
+}
+.ad-slot.leaderboard{min-height:90px;margin:0 0 64px;}
+.ad-slot.infeed{min-height:120px;grid-column:1 / -1;}
+.ad-slot.footer-ad{min-height:90px;margin-top:36px;}
+.ad-slot .ad-label{opacity:0.65;}
+
+/* ---------- buy now on card ---------- */
+.card-foot{flex-wrap:wrap;}
+.buy-now{
+  background:var(--accent);color:var(--paper);border:none;border-radius:var(--radius);
+  padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+}
+.buy-now:hover{background:var(--accent-2);}
+
+@media (max-width:860px){
+  .hero-inner{grid-template-columns:1fr;}
+  .stack{height:280px;margin-top:20px;}
+  .stack .cover-mini{width:150px;}
+  .stack .c1{left:10px;}
+  .stack .c2{left:100px;top:10px;}
+  .stack .c3{left:55px;top:50px;}
+  .why-grid{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .row2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <a href="#top" class="brand">
+      <span class="seal">TD</span>
+      <span class="word">Tinta Digital</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#por-que">Por qué</a>
+      <a href="#top-footer">Ayuda</a>
+    </nav>
+    <button class="cart-btn" onclick="openCart()">
+      Carrito <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div>
+      <span class="eyebrow">Editorial digital · Colección Código Base &amp; Oficio</span>
+      <h1>Aprende <em>haciendo</em>,<br>no memorizando.</h1>
+      <p class="lead">Ebooks técnicos escritos para leerse con el editor abierto en la otra ventana. Sin relleno, sin capítulos de venir a menos: cada guía va directa a lo que necesitas dominar.</p>
+      <div class="hero-cta">
+        <a href="#catalogo" class="btn btn-accent">Ver catálogo →</a>
+        <a href="#por-que" class="btn btn-ghost">Por qué Tinta Digital</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>5</b><span>Ebooks disponibles</span></div>
+        <div class="stat"><b>37</b><span>Capítulos en total</span></div>
+        <div class="stat"><b>PDF</b><span>Descarga inmediata</span></div>
+      </div>
+    </div>
+    <div class="stack" aria-hidden="true">
+      <div class="cover-mini c1" style="background:#1B1F3B;"></div>
+      <div class="cover-mini c2" style="background:#1B1F3B;"></div>
+      <div class="cover-mini c3" style="background:#1B1F3B;"></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap" style="padding-top:36px;">
+  <!--
+    ANUNCIO — leaderboard tras el hero.
+    Sustituye data-ad-slot por el ID real de tu bloque de anuncios de AdSense
+    y descomenta el <ins> cuando tengas la cuenta activa.
+  -->
+  <div class="ad-slot leaderboard">
+    <span class="ad-label">Espacio publicitario</span>
+    <!--
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;height:90px"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="0000000000"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    -->
+  </div>
+</div>
+
+<section class="section" id="catalogo">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Catálogo</span>
+        <h2>Cinco guías, dos colecciones</h2>
+      </div>
+      <p>Código Base cubre los fundamentos técnicos. Oficio cubre cómo moverte en el trabajo real: productividad y entrevistas.</p>
+    </div>
+    <div class="grid" id="catalogGrid"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <!-- ANUNCIO — in-feed, aparece intercalado entre las tarjetas si tienes 6+ ebooks. Mismo procedimiento: rellena y descomenta. -->
+  <div class="ad-slot infeed" style="margin-bottom:64px;">
+    <span class="ad-label">Espacio publicitario</span>
+  </div>
+</div>
+
+<section class="section why" id="por-que">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Por qué Tinta Digital</span>
+        <h2>Escritos para usarse, no para acumular polvo</h2>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-item">
+        <span class="num">01</span>
+        <h3>Ejemplos que se ejecutan</h3>
+        <p>Cada fragmento de código está pensado para copiarse y probarse tal cual, no para ilustrar en abstracto.</p>
+      </div>
+      <div class="why-item">
+        <span class="num">02</span>
+        <h3>Extensión honesta</h3>
+        <p>Ni 300 páginas de relleno ni 10 de titular. Cada guía tiene la extensión que su tema necesita, ni una página más.</p>
+      </div>
+      <div class="why-item">
+        <span class="num">03</span>
+        <h3>Tuyo para siempre</h3>
+        <p>PDF sin DRM, descarga inmediata tras la compra, para leer en cualquier dispositivo sin depender de una app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="top-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="#top" class="brand" style="margin-bottom:12px;">
+          <span class="seal">TD</span>
+          <span class="word">Tinta Digital</span>
+        </a>
+        <p>Editorial digital independiente especializada en guías técnicas prácticas para quienes están aprendiendo a programar o afinando su oficio.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>Catálogo</h4>
+          <a href="#catalogo">Código Base</a>
+          <a href="#catalogo">Oficio</a>
+        </div>
+        <div class="foot-col">
+          <h4>Tienda</h4>
+          <a href="javascript:openCart()">Mi carrito</a>
+          <a href="#por-que">Por qué Tinta Digital</a>
+        </div>
+      </div>
+    </div>
+    <!-- ANUNCIO — footer, antes de la línea de copyright. -->
+    <div class="ad-slot footer-ad">
+      <span class="ad-label">Espacio publicitario</span>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Tinta Digital. Catálogo generado automáticamente.</span>
+      <span class="mono">Pagos procesados de forma segura por Stripe</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Tu carrito</h3>
+    <button class="close-btn" onclick="closeAll()">×</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot" id="drawerFoot" style="display:none;">
+    <div class="total-row"><span>Total</span><b id="cartTotal">0,00 €</b></div>
+    <button class="btn btn-dark" style="width:100%;justify-content:center;" onclick="openCheckout()">Finalizar compra</button>
+  </div>
+</aside>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutOverlay">
+  <div class="modal" id="checkoutModal"></div>
+</div>
+
+<script>
+const CATALOG = [{"title": "Fundamentos de Desarrollo Web", "subtitle": "HTML, CSS y JavaScript desde cero hasta tu primera página", "collection": "Código Base", "level": "Nivel: Principiante", "mark": "</>", "filename": "fundamentos-desarrollo-web.pdf", "price": "9,90 €", "pages_est": 42, "teaser": "La puerta de entrada al desarrollo web: estructura, estilo y comportamiento explicados sin rodeos.", "chapters": 6}, {"title": "SQL desde Cero", "subtitle": "Guía práctica para consultar y modelar bases de datos relacionales", "collection": "Código Base", "level": "Nivel: Principiante–Intermedio", "mark": "SQL", "filename": "sql-desde-cero.pdf", "price": "9,90 €", "pages_est": 38, "teaser": "Consultas, joins y diseño de tablas explicados con ejemplos que se pueden ejecutar tal cual.", "chapters": 7}, {"title": "Java y Programación Orientada a Objetos", "subtitle": "Clases, herencia y polimorfismo explicados con ejemplos ejecutables", "collection": "Código Base", "level": "Nivel: Intermedio", "mark": "{ }", "filename": "java-poo.pdf", "price": "11,90 €", "pages_est": 46, "teaser": "Los cuatro pilares de la POO llevados a código Java real, sin teoría abstracta desconectada de la práctica.", "chapters": 7}, {"title": "Productividad para Programadores", "subtitle": "Gestionar el foco, las tareas y la energía en el trabajo técnico", "collection": "Oficio", "level": "Nivel: Todos los niveles", "mark": "▲", "filename": "productividad-programadores.pdf", "price": "7,90 €", "pages_est": 30, "teaser": "Estrategias concretas para programar con menos fricción y terminar lo que empiezas.", "chapters": 6}, {"title": "Guía de Entrevistas Técnicas", "subtitle": "Cómo prepararte para procesos de selección en desarrollo de software", "collection": "Oficio", "level": "Nivel: Todos los niveles", "mark": "?!", "filename": "entrevistas-tecnicas.pdf", "price": "8,90 €", "pages_est": 34, "teaser": "Qué evalúan realmente las entrevistas técnicas y cómo prepararte sin memorizar respuestas vacías.", "chapters": 6}];
+
+/*
+============================================================
+STRIPE — pago real, incluidos carritos con varios ebooks a la vez
+============================================================
+Esta tienda ya no usa Payment Links sueltos: el botón "Comprar" y
+"Finalizar compra" llaman a una función serverless (/api/create-checkout-session)
+que crea UNA única sesión de Stripe Checkout con todos los ebooks del
+carrito. Esa función vive en netlify/functions/ y necesita:
+  1. La librería "stripe" instalada (ya está en package.json).
+  2. La variable de entorno STRIPE_SECRET_KEY configurada en Netlify
+     (Site settings → Environment variables) — nunca en este archivo.
+  3. Los Price ID de cada producto rellenados en
+     netlify/functions/_config.js.
+Todo el detalle está en esos archivos.
+============================================================
+*/
+
+let cart = []; // array of filenames
+
+function money(str){
+  return parseFloat(str.replace(/[^\d,]/g,'').replace(',','.'));
+}
+function fmt(n){
+  return n.toFixed(2).replace('.', ',') + ' €';
+}
+
+function renderCatalog(){
+  const grid = document.getElementById('catalogGrid');
+  grid.innerHTML = CATALOG.map(b => `
+    <div class="card">
+      <div class="cover">
+        <div class="band-top"></div>
+        <span class="coll">${b.collection}</span>
+        <div class="seal">${b.mark}</div>
+        <div class="ctitle">${b.title}</div>
+      </div>
+      <div class="card-body">
+        <p class="teaser">${b.teaser}</p>
+        <div class="card-meta">
+          <span>${b.chapters} capítulos · ~${b.pages_est} pág.</span>
+        </div>
+        <div class="card-foot">
+          <span class="price">${b.price}</span>
+          <div style="display:flex;gap:8px;">
+            <button class="add-btn" id="btn-${b.filename}" onclick="addToCart('${b.filename}', this)">+ Añadir</button>
+            <button class="buy-now" onclick="buyNow('${b.filename}')">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(filename, btnEl){
+  if(!cart.includes(filename)){
+    cart.push(filename);
+  }
+  if(btnEl){
+    btnEl.textContent = 'En el carrito ✓';
+    btnEl.classList.add('added');
+  }
+  updateCartUI();
+  openCart();
+}
+
+function removeFromCart(filename){
+  cart = cart.filter(f => f !== filename);
+  const btn = document.getElementById('btn-' + filename);
+  if(btn){ btn.textContent = '+ Añadir'; btn.classList.remove('added'); }
+  updateCartUI();
+}
+
+function updateCartUI(){
+  document.getElementById('cartCount').textContent = cart.length;
+  const itemsEl = document.getElementById('drawerItems');
+  const footEl = document.getElementById('drawerFoot');
+  if(cart.length === 0){
+    itemsEl.innerHTML = '<div class="drawer-empty">Tu carrito está vacío.<br>Añade algún ebook del catálogo.</div>';
+    footEl.style.display = 'none';
+    return;
+  }
+  let total = 0;
+  itemsEl.innerHTML = cart.map(fn => {
+    const b = CATALOG.find(x => x.filename === fn);
+    total += money(b.price);
+    return `
+      <div class="d-item">
+        <div class="mini">${b.mark}</div>
+        <div class="d-item-info">
+          <h4>${b.title}</h4>
+          <div class="p">${b.price}</div>
+          <button class="d-remove" onclick="removeFromCart('${b.filename}')">Quitar</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  footEl.style.display = 'block';
+  document.getElementById('cartTotal').textContent = fmt(total);
+}
+
+function openCart(){
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeAll(){
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('checkoutOverlay').classList.remove('open');
+}
+
+// Compra directa de un único ebook desde su tarjeta
+function buyNow(filename){
+  goToStripeCheckout([filename]);
+}
+
+// "Finalizar compra": un único pago de Stripe con TODOS los ebooks
+// del carrito, gracias a la función serverless create-checkout-session.
+function openCheckout(){
+  if(cart.length === 0) return;
+  goToStripeCheckout([...cart]);
+}
+
+async function goToStripeCheckout(filenames){
+  document.getElementById('drawer').classList.remove('open');
+  const modal = document.getElementById('checkoutModal');
+  modal.innerHTML = `
+    <div class="success">
+      <div class="spinner"></div>
+      <p class="sub" style="margin-top:14px;">Conectando con Stripe…</p>
+    </div>
+  `;
+  document.getElementById('checkoutOverlay').classList.add('open');
+
+  try{
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ filenames })
+    });
+    const data = await res.json();
+    if(!res.ok || !data.url){
+      throw new Error(data.error || 'No se pudo iniciar el pago.');
+    }
+    window.location.href = data.url; // Stripe Checkout hospedado, un único pago
+  }catch(err){
+    modal.innerHTML = `
+      <h3>No se pudo iniciar el pago</h3>
+      <p class="sub">${err.message}</p>
+      <div class="modal-note">
+        Esto suele pasar si la función serverless todavía no está desplegada,
+        falta la variable de entorno <span class="mono">STRIPE_SECRET_KEY</span>
+        en Netlify, o falta rellenar algún Price ID en
+        <span class="mono">netlify/functions/_config.js</span>.
+      </div>
+      <button class="btn btn-dark" style="width:100%;justify-content:center;" onclick="closeAll()">Cerrar</button>
+    `;
+  }
+}
+
+renderCatalog();
+updateCartUI();
+</script>
+
+</body>
+</html>

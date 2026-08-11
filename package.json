@@ -1,0 +1,9 @@
+{
+  "name": "tinta-digital",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tienda de ebooks Tinta Digital con pagos reales vía Stripe Checkout.",
+  "dependencies": {
+    "stripe": "^16.0.0"
+  }
+}

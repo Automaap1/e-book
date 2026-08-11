@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gracias por tu compra — Tinta Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1F3B; --accent:#E4572E; --accent-2:#F2794F; --paper:#FAF7F0;
+    --paper-dim:#F0EBDF; --mute-dark:#6B6F8C; --ok:#3FA796;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;min-height:100vh;background:var(--ink);color:var(--paper);
+    font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+  .card{
+    background:var(--paper);color:var(--ink);border-radius:10px;max-width:480px;width:100%;
+    padding:40px 34px;text-align:center;
+  }
+  .check{
+    width:60px;height:60px;border-radius:50%;background:var(--ok);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;
+  }
+  .warn{background:var(--accent);}
+  h1{font-family:'Fraunces',serif;font-size:26px;margin:0 0 8px;}
+  p.sub{color:var(--mute-dark);font-size:14.5px;line-height:1.6;margin:0 0 26px;}
+  .dl-list{margin:0 0 22px;text-align:left;}
+  .dl-item{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    background:var(--paper-dim);border-radius:8px;padding:14px 16px;margin-bottom:10px;
+  }
+  .dl-item span{font-size:13.5px;font-weight:600;}
+  .dl-btn{
+    display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--paper);
+    text-decoration:none;font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:4px;flex-shrink:0;
+  }
+  .dl-btn:hover{background:var(--accent-2);}
+  .missing{
+    background:#FCEBE6;border-left:3px solid var(--accent);padding:14px 16px;border-radius:0 6px 6px 0;
+    text-align:left;font-size:13px;color:var(--ink);line-height:1.6;
+  }
+  a.back{display:block;margin-top:22px;font-size:13px;color:var(--mute-dark);text-decoration:none;}
+  a.back:hover{color:var(--ink);}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .spinner{
+    width:34px;height:34px;border:3px solid rgba(27,31,59,0.15);border-top-color:var(--accent);
+    border-radius:50%;margin:10px auto 22px;animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="spinner"></div>
+    <h1>Confirmando tu pago…</h1>
+    <p class="sub">Estamos verificando la operación directamente con Stripe. No cierres esta página.</p>
+  </div>
+
+<script>
+/*
+============================================================
+Cómo funciona esta página:
+Stripe redirige aquí tras un pago, con la URL:
+  https://tudominio.com/success.html?session_id=cs_test_xxxxx
+Esta página NUNCA confía en lo que diga la propia URL: llama a la
+función serverless /api/verify-session, que pregunta directamente
+a Stripe si esa sesión está pagada de verdad y qué ebooks incluía,
+antes de enseñar ningún enlace de descarga.
+============================================================
+*/
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get('session_id');
+const card = document.getElementById('card');
+
+function showError(title, message){
+  card.innerHTML = `
+    <div class="check warn">!</div>
+    <h1>${title}</h1>
+    <p class="sub">${message}</p>
+    <a class="back" href="index.html">← Volver a la tienda</a>
+  `;
+}
+
+if(!sessionId){
+  showError(
+    'No hemos encontrado tu compra',
+    'Esta página se abre automáticamente justo después de pagar en Stripe. Si has llegado aquí directamente, vuelve a la tienda e inténtalo de nuevo.'
+  );
+} else {
+  fetch('/api/verify-session?session_id=' + encodeURIComponent(sessionId))
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if(!ok){
+        showError('No se pudo verificar el pago', data.error || 'Ha ocurrido un error inesperado.');
+        return;
+      }
+      if(!data.paid){
+        showError(
+          'Pago todavía no confirmado',
+          'Stripe indica que esta sesión no se ha completado. Si has pagado y ves este mensaje, espera unos segundos y recarga la página.'
+        );
+        return;
+      }
+      card.innerHTML = `
+        <div class="check">✓</div>
+        <h1>Pago confirmado</h1>
+        <p class="sub">Gracias por tu compra. Tus ${data.items.length > 1 ? 'ebooks están' : 'ebook está'} listo${data.items.length > 1 ? 's' : ''} para descargar.</p>
+        <div class="dl-list">
+          ${data.items.map(b => `
+            <div class="dl-item">
+              <span>${b.title}</span>
+              <a class="dl-btn" href="${b.filename}" download>Descargar ↓</a>
+            </div>
+          `).join('')}
+        </div>
+        <a class="back" href="index.html">← Volver a la tienda</a>
+      `;
+    })
+    .catch(() => {
+      showError('No se pudo verificar el pago', 'No hemos podido contactar con el servidor. Inténtalo de nuevo en unos segundos.');
+    });
+}
+</script>
+</body>
+</html>
